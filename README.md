@@ -1,7 +1,6 @@
 # Snake-Xenzia-only-for-Ashley
 Creating an interesting game only for my love, Ashley. Hope her happy everyday!
 
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -1564,4 +1563,365 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             selectedLevelId = null;
             showScreen('startScreen');
             
-            if (
+            if (gameLoop) {
+                clearInterval(gameLoop);
+                gameLoop = null;
+            }
+        }
+        
+        function showLevelSelect() {
+            generateLevelButtons();
+            showScreen('levelSelectScreen');
+            
+            document.getElementById('startLevelBtn').style.display = 'none';
+            document.getElementById('levelInfo').innerHTML = `
+                <h3>请选择一个关卡</h3>
+                <p>点击上方关卡按钮查看详情</p>
+            `;
+        }
+        
+        function showInstructions() {
+            showScreen('instructionsScreen');
+        }
+        
+        function startPractice() {
+            selectedLevelId = 0;
+            startGame();
+        }
+        
+        function selectLevel(levelId) {
+            const level = levels.find(l => l.id === levelId);
+            if (!level || !level.unlocked) {
+                return;
+            }
+            
+            selectedLevelId = levelId;
+            
+            // 更新选中状态
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            const levelBtn = document.querySelector(`[data-level="${levelId}"]`);
+            if (levelBtn) {
+                levelBtn.classList.add('selected');
+            }
+            
+            // 显示关卡信息
+            if (levelId === 0) {
+                document.getElementById('levelInfo').innerHTML = `
+                    <h3>${level.emoji} ${level.name}</h3>
+                    <p>${level.description}</p>
+                    <p>无限生命，体验所有道具效果</p>
+                `;
+            } else {
+                document.getElementById('levelInfo').innerHTML = `
+                    <h3>${level.emoji} ${level.name}</h3>
+                    <p>${level.description}</p>
+                    <p>目标分数: <span style="color: #FFD700;">${level.targetScore}</span></p>
+                    <p>初始生命: <span style="color: #FF6B6B;">500</span></p>
+                `;
+            }
+            
+            document.getElementById('startLevelBtn').style.display = 'inline-block';
+        }
+        
+        function startSelectedLevel() {
+            if (selectedLevelId === null) {
+                return;
+            }
+            startGame();
+        }
+        
+        function startGame() {
+            if (selectedLevelId === null) {
+                return;
+            }
+            
+            gameState = 'playing';
+            
+            // 创建或重置游戏实例
+            if (!game) {
+                game = new SnakeGame();
+            } else {
+                game.reset();
+            }
+            
+            // 显示游戏界面
+            showScreen(null);
+            document.getElementById('gameUI').classList.add('active');
+            document.getElementById('controls').classList.add('active');
+            
+            // 启动游戏循环
+            if (gameLoop) {
+                clearInterval(gameLoop);
+            }
+            
+            function gameLoopFunction() {
+                if (gameState === 'playing' && game) {
+                    game.updatePowerups();
+                    game.move();
+                    game.draw();
+                    
+                    // 动态调整游戏循环速度
+                    const currentSpeed = game.getCurrentSpeed();
+                    if (currentSpeed !== game.speed) {
+                        clearInterval(gameLoop);
+                        gameLoop = setInterval(gameLoopFunction, currentSpeed);
+                    }
+                }
+            }
+            
+            gameLoop = setInterval(gameLoopFunction, game.getCurrentSpeed());
+        }
+        
+        function generateLevelButtons() {
+            const container = document.getElementById('levelSelect');
+            container.innerHTML = '';
+            
+            levels.forEach(level => {
+                const button = document.createElement('button');
+                button.className = `level-btn ${level.unlocked ? 'unlocked' : 'locked'}`;
+                button.setAttribute('data-level', level.id);
+                
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'level-number';
+                numberDiv.textContent = level.id === 0 ? level.emoji : level.id;
+                
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'level-name';
+                nameDiv.textContent = level.name;
+                
+                button.appendChild(numberDiv);
+                button.appendChild(nameDiv);
+                
+                if (level.unlocked) {
+                    button.addEventListener('click', () => selectLevel(level.id));
+                }
+                
+                container.appendChild(button);
+            });
+        }
+        
+        function pauseGame() {
+            if (gameState === 'playing') {
+                gameState = 'paused';
+                showScreen('pauseScreen');
+            }
+        }
+        
+        function resumeGame() {
+            gameState = 'playing';
+            showScreen(null);
+            document.getElementById('gameUI').classList.add('active');
+            document.getElementById('controls').classList.add('active');
+            document.getElementById('effectIndicators').classList.add('active');
+        }
+        
+        function restartLevel() {
+            startGame();
+        }
+        
+        function quitToMenu() {
+            showStartScreen();
+        }
+        
+        function nextLevel() {
+            if (selectedLevelId < levels.length - 1) {
+                selectedLevelId++;
+                startGame();
+            } else {
+                showStartScreen();
+            }
+        }
+        
+        // 事件监听器设置
+        function setupEventListeners() {
+            // 主菜单按钮
+            document.getElementById('practiceBtn').addEventListener('click', startPractice);
+            document.getElementById('adventureBtn').addEventListener('click', showLevelSelect);
+            document.getElementById('instructionsBtn').addEventListener('click', showInstructions);
+            
+            // 关卡选择按钮
+            document.getElementById('startLevelBtn').addEventListener('click', startSelectedLevel);
+            document.getElementById('backToMenuBtn').addEventListener('click', showStartScreen);
+            
+            // 说明页按钮
+            document.getElementById('backFromInstructionsBtn').addEventListener('click', showStartScreen);
+            
+            // 暂停页按钮
+            document.getElementById('resumeBtn').addEventListener('click', resumeGame);
+            document.getElementById('restartBtn').addEventListener('click', restartLevel);
+            document.getElementById('quitBtn').addEventListener('click', quitToMenu);
+            
+            // 游戏结束页按钮
+            document.getElementById('restartGameBtn').addEventListener('click', restartLevel);
+            document.getElementById('selectLevelBtn').addEventListener('click', showLevelSelect);
+            document.getElementById('returnMenuBtn').addEventListener('click', showStartScreen);
+            
+            // 关卡完成页按钮
+            document.getElementById('nextLevelBtn').addEventListener('click', nextLevel);
+            document.getElementById('chooseLevelBtn').addEventListener('click', showLevelSelect);
+            document.getElementById('backToMenuFromCompleteBtn').addEventListener('click', showStartScreen);
+            
+            // 游戏控制按钮
+            document.getElementById('pauseBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (gameState === 'playing') {
+                    pauseGame();
+                } else if (gameState === 'paused') {
+                    resumeGame();
+                }
+            });
+            
+            document.getElementById('menuBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                quitToMenu();
+            });
+            
+            // 键盘控制
+            document.addEventListener('keydown', (e) => {
+                if (gameState !== 'playing' || !game) return;
+                
+                const keyMap = {
+                    'ArrowUp': {x: 0, y: -1},
+                    'w': {x: 0, y: -1},
+                    'W': {x: 0, y: -1},
+                    'ArrowDown': {x: 0, y: 1},
+                    's': {x: 0, y: 1},
+                    'S': {x: 0, y: 1},
+                    'ArrowLeft': {x: -1, y: 0},
+                    'a': {x: -1, y: 0},
+                    'A': {x: -1, y: 0},
+                    'ArrowRight': {x: 1, y: 0},
+                    'd': {x: 1, y: 0},
+                    'D': {x: 1, y: 0}
+                };
+                
+                if (keyMap[e.key]) {
+                    e.preventDefault();
+                    game.changeDirection(keyMap[e.key]);
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    pauseGame();
+                }
+            });
+            
+            // 触摸滑动控制
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchStartTime = 0;
+            
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+                touchStartTime = Date.now();
+            }, { passive: false });
+            
+            canvas.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                
+                if (gameState !== 'playing' || !game) return;
+                
+                const touch = e.changedTouches[0];
+                const touchEndX = touch.clientX;
+                const touchEndY = touch.clientY;
+                const touchEndTime = Date.now();
+                
+                const deltaX = touchEndX - touchStartX;
+                const deltaY = touchEndY - touchStartY;
+                const deltaTime = touchEndTime - touchStartTime;
+                
+                // 防止过长时间的滑动
+                if (deltaTime > 500) return;
+                
+                const minSwipeDistance = 30;
+                const absDeltaX = Math.abs(deltaX);
+                const absDeltaY = Math.abs(deltaY);
+                
+                if (absDeltaX > minSwipeDistance || absDeltaY > minSwipeDistance) {
+                    if (absDeltaX > absDeltaY) {
+                        // 水平滑动
+                        game.changeDirection(deltaX > 0 ? {x: 1, y: 0} : {x: -1, y: 0});
+                    } else {
+                        // 垂直滑动
+                        game.changeDirection(deltaY > 0 ? {x: 0, y: 1} : {x: 0, y: -1});
+                    }
+                }
+            }, { passive: false });
+            
+            // 防止滚动
+            document.addEventListener('touchmove', (e) => {
+                if (e.target === canvas) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // 窗口大小调整
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    resizeCanvas();
+                    if (game && gameState === 'playing') {
+                        game.reset();
+                    }
+                }, 100);
+            });
+            
+            // 页面可见性变化
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && gameState === 'playing') {
+                    pauseGame();
+                }
+            });
+        }
+        
+        function resizeCanvas() {
+            console.log('📐 调整画布大小...');
+            const container = document.getElementById('gameContainer');
+            
+            // 设置画布尺寸为容器尺寸
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            
+            console.log(`✅ 画布大小: ${canvas.width}x${canvas.height}`);
+        }
+        
+        // 初始化函数
+        function init() {
+            console.log('🚀 开始初始化游戏...');
+            
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            
+            if (!canvas || !ctx) {
+                console.error('❌ 无法获取画布或上下文');
+                alert('游戏初始化失败，请刷新页面重试');
+                return;
+            }
+            
+            resizeCanvas();
+            setupEventListeners();
+            
+            console.log('🎮 贪食蛇大冒险已准备就绪！');
+        }
+        
+        // 错误处理
+        window.addEventListener('error', (e) => {
+            console.error('💥 游戏错误:', e.error);
+            if (gameState === 'playing') {
+                pauseGame();
+            }
+        });
+        
+        // 页面加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
