@@ -45,6 +45,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             height: 100%;
             display: block;
             touch-action: none;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         
         /* 游戏UI */
@@ -65,7 +68,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             font-weight: bold;
         }
         
-        #gameUI.active { display: flex; }
+        #gameUI.active { 
+            display: flex; 
+        }
         
         .ui-item {
             text-align: center;
@@ -98,7 +103,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             z-index: 100;
         }
         
-        #controls.active { display: grid; }
+        #controls.active { 
+            display: grid; 
+        }
         
         .control-btn {
             background: rgba(255,255,255,0.2);
@@ -142,7 +149,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             text-align: center;
         }
         
-        .screen.active { display: flex; }
+        .screen.active { 
+            display: flex; 
+        }
         
         .screen h1 {
             font-size: 2.5rem;
@@ -235,7 +244,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             cursor: not-allowed;
         }
         
-        /* 修复滚动问题的样式 */
+        /* 滚动内容 */
         .scrollable-content {
             max-height: 60vh;
             overflow-y: auto;
@@ -345,9 +354,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         <div id="startScreen" class="screen active">
             <h1>🐍 贪食蛇大冒险</h1>
             <p style="margin-bottom: 30px;">准备好挑战史上最刺激的贪食蛇游戏了吗？</p>
-            <button class="btn practice" onclick="startPractice()">🏋️ 练习场</button>
-            <button class="btn primary" onclick="showLevelSelect()">🚀 开始冒险</button>
-            <button class="btn secondary" onclick="showInstructions()">📖 游戏说明</button>
+            <button class="btn practice" id="practiceBtn">🏋️ 练习场</button>
+            <button class="btn primary" id="adventureBtn">🚀 开始冒险</button>
+            <button class="btn secondary" id="instructionsBtn">📖 游戏说明</button>
         </div>
         
         <!-- 关卡选择屏幕 -->
@@ -358,8 +367,8 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 <h3>请选择一个关卡</h3>
                 <p>点击上方关卡按钮查看详情</p>
             </div>
-            <button class="btn primary" id="startLevelBtn" onclick="startSelectedLevel()" style="display: none;">开始游戏</button>
-            <button class="btn secondary" onclick="showStartScreen()">返回</button>
+            <button class="btn primary" id="startLevelBtn" style="display: none;">开始游戏</button>
+            <button class="btn secondary" id="backToMenuBtn">返回</button>
         </div>
         
         <!-- 游戏说明屏幕 -->
@@ -406,15 +415,15 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 <p>• 善用道具效果时间</p>
                 <p>• 保持冷静，稳中求胜</p>
             </div>
-            <button class="btn" onclick="showStartScreen()">返回主菜单</button>
+            <button class="btn" id="backFromInstructionsBtn">返回主菜单</button>
         </div>
         
         <!-- 暂停屏幕 -->
         <div id="pauseScreen" class="screen">
             <h1>游戏暂停</h1>
-            <button class="btn primary" onclick="resumeGame()">继续游戏</button>
-            <button class="btn secondary" onclick="restartLevel()">重新开始</button>
-            <button class="btn danger" onclick="quitToMenu()">退出到菜单</button>
+            <button class="btn primary" id="resumeBtn">继续游戏</button>
+            <button class="btn secondary" id="restartBtn">重新开始</button>
+            <button class="btn danger" id="quitBtn">退出到菜单</button>
         </div>
         
         <!-- 游戏结束屏幕 -->
@@ -424,9 +433,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 <p>最终分数: <span id="finalScore" style="color: #FFD700; font-weight: bold;">0</span></p>
                 <p>存活时间: <span id="survivalTime" style="color: #87CEEB; font-weight: bold;">0</span>秒</p>
             </div>
-            <button class="btn primary" onclick="restartLevel()">重新挑战</button>
-            <button class="btn secondary" onclick="showLevelSelect()">选择关卡</button>
-            <button class="btn danger" onclick="showStartScreen()">返回主菜单</button>
+            <button class="btn primary" id="restartGameBtn">重新挑战</button>
+            <button class="btn secondary" id="selectLevelBtn">选择关卡</button>
+            <button class="btn danger" id="returnMenuBtn">返回主菜单</button>
         </div>
         
         <!-- 关卡完成屏幕 -->
@@ -435,18 +444,20 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             <div style="margin: 20px 0;">
                 <p>获得分数: <span id="levelScore" style="color: #FFD700; font-weight: bold;">0</span></p>
             </div>
-            <button class="btn primary" onclick="nextLevel()">下一关</button>
-            <button class="btn secondary" onclick="showLevelSelect()">选择关卡</button>
+            <button class="btn primary" id="nextLevelBtn">下一关</button>
+            <button class="btn secondary" id="chooseLevelBtn">选择关卡</button>
         </div>
     </div>
 
     <script>
+        console.log('脚本开始加载...');
+
         // 全局变量
         let canvas, ctx;
         let gameState = 'menu';
         let selectedLevelId = null;
-        let game;
-        let gameLoop;
+        let game = null;
+        let gameLoop = null;
         
         // 关卡定义
         const levels = [
@@ -507,11 +518,13 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         // 游戏类
         class SnakeGame {
             constructor() {
+                console.log('创建游戏实例...');
                 this.gridSize = 20;
                 this.reset();
             }
             
             reset() {
+                console.log('重置游戏状态...');
                 this.cols = Math.floor(canvas.width / this.gridSize);
                 this.rows = Math.floor(canvas.height / this.gridSize);
                 
@@ -530,6 +543,8 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 this.generateFood();
                 this.updateUI();
+                
+                console.log('游戏状态重置完成');
             }
             
             generateFood() {
@@ -558,12 +573,10 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
             
             isPositionOccupied(x, y) {
-                // 检查蛇身
                 for (const segment of this.snake) {
                     if (segment.x === x && segment.y === y) return true;
                 }
                 
-                // 检查墙壁
                 const currentLevel = levels.find(l => l.id === selectedLevelId);
                 if (currentLevel && currentLevel.walls) {
                     for (const wall of currentLevel.walls) {
@@ -583,7 +596,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 head.x += this.direction.x;
                 head.y += this.direction.y;
                 
-                // 边界处理
                 if (!this.activePowerups.has('wallpass')) {
                     if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows) {
                         this.handleCollision();
@@ -594,7 +606,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     head.y = (head.y + this.rows) % this.rows;
                 }
                 
-                // 检查碰撞
                 if (this.checkCollision(head)) {
                     this.handleCollision();
                     return;
@@ -602,7 +613,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 this.snake.unshift(head);
                 
-                // 检查食物
                 if (this.food && head.x === this.food.x && head.y === this.food.y) {
                     this.eatFood();
                 } else {
@@ -611,7 +621,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
             
             checkCollision(head) {
-                // 检查自身碰撞
                 if (!this.activePowerups.has('invincible')) {
                     for (let i = 1; i < this.snake.length; i++) {
                         if (this.snake[i].x === head.x && this.snake[i].y === head.y) {
@@ -620,7 +629,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     }
                 }
                 
-                // 检查墙壁碰撞
                 if (!this.activePowerups.has('wallpass')) {
                     const currentLevel = levels.find(l => l.id === selectedLevelId);
                     if (currentLevel && currentLevel.walls) {
@@ -646,7 +654,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 if (this.lives <= 0 && selectedLevelId !== 0) {
                     this.gameOver();
                 } else {
-                    // 重置蛇位置
                     const startCol = Math.floor(this.cols / 2);
                     const startRow = Math.floor(this.rows / 2);
                     this.snake = [{x: startCol, y: startRow}];
@@ -669,7 +676,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 this.generateFood();
                 this.updateUI();
                 
-                // 检查关卡完成
                 if (selectedLevelId !== 0) {
                     const currentLevel = levels.find(l => l.id === selectedLevelId);
                     if (this.score >= currentLevel.targetScore) {
@@ -743,7 +749,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 gameState = 'levelComplete';
                 document.getElementById('levelScore').textContent = this.score;
                 
-                // 解锁下一关
                 if (selectedLevelId < levels.length - 1) {
                     levels[selectedLevelId + 1].unlocked = true;
                 }
@@ -762,11 +767,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
             
             draw() {
-                // 清空画布
                 ctx.fillStyle = '#1a1a2e';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                // 绘制墙壁
                 const currentLevel = levels.find(l => l.id === selectedLevelId);
                 if (currentLevel && currentLevel.walls && selectedLevelId !== 0) {
                     ctx.fillStyle = '#8B4513';
@@ -780,7 +783,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     });
                 }
                 
-                // 绘制食物
                 if (this.food) {
                     const foodData = powerups[this.food.type];
                     const x = this.food.x * this.gridSize;
@@ -796,17 +798,14 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     );
                 }
                 
-                // 绘制蛇
                 this.snake.forEach((segment, index) => {
                     const x = segment.x * this.gridSize;
                     const y = segment.y * this.gridSize;
                     
                     if (index === 0) {
-                        // 蛇头
                         ctx.fillStyle = this.activePowerups.has('invincible') ? '#FFD700' : '#32CD32';
                         ctx.fillRect(x + 2, y + 2, this.gridSize - 4, this.gridSize - 4);
                         
-                        // 眼睛
                         ctx.fillStyle = 'white';
                         ctx.fillRect(x + 6, y + 4, 3, 3);
                         ctx.fillRect(x + this.gridSize - 9, y + 4, 3, 3);
@@ -815,13 +814,11 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                         ctx.fillRect(x + 7, y + 5, 1, 1);
                         ctx.fillRect(x + this.gridSize - 8, y + 5, 1, 1);
                     } else {
-                        // 蛇身
                         ctx.fillStyle = '#90EE90';
                         ctx.fillRect(x + 1, y + 1, this.gridSize - 2, this.gridSize - 2);
                     }
                 });
                 
-                // 道具效果指示
                 if (this.activePowerups.has('invincible')) {
                     ctx.fillStyle = 'rgba(255, 215, 0, 0.2)';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -831,20 +828,27 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         
         // 屏幕管理函数
         function showScreen(screenId) {
-            // 隐藏所有屏幕
+            console.log('显示屏幕:', screenId);
+            
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
             
-            // 隐藏游戏UI和控制
             document.getElementById('gameUI').classList.remove('active');
             document.getElementById('controls').classList.remove('active');
             
-            // 显示指定屏幕
-            document.getElementById(screenId).classList.add('active');
+            if (screenId) {
+                const screen = document.getElementById(screenId);
+                if (screen) {
+                    screen.classList.add('active');
+                } else {
+                    console.error('屏幕未找到:', screenId);
+                }
+            }
         }
         
         function showStartScreen() {
+            console.log('显示开始屏幕');
             gameState = 'menu';
             selectedLevelId = null;
             showScreen('startScreen');
@@ -856,6 +860,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         function showLevelSelect() {
+            console.log('显示关卡选择');
             generateLevelButtons();
             showScreen('levelSelectScreen');
             
@@ -867,27 +872,31 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         function showInstructions() {
+            console.log('显示游戏说明');
             showScreen('instructionsScreen');
         }
         
         function startPractice() {
+            console.log('开始练习模式');
             selectedLevelId = 0;
             startGame();
         }
         
         function selectLevel(levelId) {
+            console.log('选择关卡:', levelId);
             const level = levels.find(l => l.id === levelId);
             if (!level || !level.unlocked) return;
             
             selectedLevelId = levelId;
             
-            // 更新选中状态
             document.querySelectorAll('.level-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            document.querySelector(`[data-level="${levelId}"]`).classList.add('selected');
+            const levelBtn = document.querySelector(`[data-level="${levelId}"]`);
+            if (levelBtn) {
+                levelBtn.classList.add('selected');
+            }
             
-            // 显示关卡信息
             if (levelId === 0) {
                 document.getElementById('levelInfo').innerHTML = `
                     <h3>${level.name}</h3>
@@ -907,28 +916,31 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         function startSelectedLevel() {
+            console.log('开始选中的关卡:', selectedLevelId);
             if (selectedLevelId === null) return;
             startGame();
         }
         
         function startGame() {
-            if (selectedLevelId === null) return;
+            console.log('开始游戏，关卡ID:', selectedLevelId);
+            
+            if (selectedLevelId === null) {
+                console.error('未选择关卡');
+                return;
+            }
             
             gameState = 'playing';
             
-            // 重置或创建游戏实例
             if (!game) {
                 game = new SnakeGame();
             } else {
                 game.reset();
             }
             
-            // 显示游戏UI
-            showScreen(''); // 不显示任何屏幕
+            showScreen(null);
             document.getElementById('gameUI').classList.add('active');
             document.getElementById('controls').classList.add('active');
             
-            // 开始游戏循环
             if (gameLoop) {
                 clearInterval(gameLoop);
             }
@@ -940,6 +952,8 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     game.draw();
                 }
             }, game.speed);
+            
+            console.log('游戏开始成功');
         }
         
         function generateLevelButtons() {
@@ -964,7 +978,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 }
                 
                 if (level.unlocked) {
-                    button.onclick = () => selectLevel(level.id);
+                    button.addEventListener('click', () => selectLevel(level.id));
                 }
                 
                 container.appendChild(button);
@@ -980,9 +994,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         
         function resumeGame() {
             gameState = 'playing';
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
+            showScreen(null);
             document.getElementById('gameUI').classList.add('active');
             document.getElementById('controls').classList.add('active');
         }
@@ -1004,30 +1016,58 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
         }
         
-        // 事件监听器
+        // 事件监听器设置
         function setupEventListeners() {
-            // 控制按钮
-            document.getElementById('upBtn').addEventListener('touchstart', (e) => {
+            console.log('设置事件监听器...');
+            
+            // 主菜单按钮
+            document.getElementById('practiceBtn').addEventListener('click', startPractice);
+            document.getElementById('adventureBtn').addEventListener('click', showLevelSelect);
+            document.getElementById('instructionsBtn').addEventListener('click', showInstructions);
+            
+            // 关卡选择按钮
+            document.getElementById('startLevelBtn').addEventListener('click', startSelectedLevel);
+            document.getElementById('backToMenuBtn').addEventListener('click', showStartScreen);
+            
+            // 说明页按钮
+            document.getElementById('backFromInstructionsBtn').addEventListener('click', showStartScreen);
+            
+            // 暂停页按钮
+            document.getElementById('resumeBtn').addEventListener('click', resumeGame);
+            document.getElementById('restartBtn').addEventListener('click', restartLevel);
+            document.getElementById('quitBtn').addEventListener('click', quitToMenu);
+            
+            // 游戏结束页按钮
+            document.getElementById('restartGameBtn').addEventListener('click', restartLevel);
+            document.getElementById('selectLevelBtn').addEventListener('click', showLevelSelect);
+            document.getElementById('returnMenuBtn').addEventListener('click', showStartScreen);
+            
+            // 关卡完成页按钮
+            document.getElementById('nextLevelBtn').addEventListener('click', nextLevel);
+            document.getElementById('chooseLevelBtn').addEventListener('click', showLevelSelect);
+            
+            // 游戏控制按钮
+            document.getElementById('upBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 if (game && gameState === 'playing') game.changeDirection({x: 0, y: -1});
             });
             
-            document.getElementById('downBtn').addEventListener('touchstart', (e) => {
+            document.getElementById('downBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 if (game && gameState === 'playing') game.changeDirection({x: 0, y: 1});
             });
             
-            document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+            document.getElementById('leftBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 if (game && gameState === 'playing') game.changeDirection({x: -1, y: 0});
             });
             
-            document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+            document.getElementById('rightBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 if (game && gameState === 'playing') game.changeDirection({x: 1, y: 0});
             });
             
-            document.getElementById('pauseBtn').addEventListener('touchstart', (e) => {
+            document.getElementById('pauseBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 if (gameState === 'playing') {
                     pauseGame();
@@ -1114,9 +1154,12 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             
             // 窗口大小调整
             window.addEventListener('resize', resizeCanvas);
+            
+            console.log('事件监听器设置完成');
         }
         
         function resizeCanvas() {
+            console.log('调整画布大小...');
             const container = document.getElementById('gameContainer');
             const rect = container.getBoundingClientRect();
             
@@ -1128,19 +1171,32 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
         }
         
-        // 初始化
+        // 初始化函数
         function init() {
+            console.log('开始初始化游戏...');
+            
             canvas = document.getElementById('gameCanvas');
             ctx = canvas.getContext('2d');
+            
+            if (!canvas || !ctx) {
+                console.error('无法获取画布或上下文');
+                return;
+            }
             
             resizeCanvas();
             setupEventListeners();
             
-            console.log('游戏初始化完成');
+            console.log('游戏初始化完成！');
         }
         
         // 页面加载完成后初始化
-        window.addEventListener('load', init);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+        
+        console.log('脚本加载完成');
     </script>
 </body>
 </html>
