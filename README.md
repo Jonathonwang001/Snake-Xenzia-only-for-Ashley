@@ -17,19 +17,23 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             user-select: none;
         }
         
-        body {
+        html, body {
+            height: 100%;
+            overflow: hidden;
             font-family: 'Arial', sans-serif;
+        }
+        
+        body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
             position: fixed;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100vh;
         }
         
         #gameContainer {
@@ -40,24 +44,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             overflow: hidden;
             display: flex;
             flex-direction: column;
-        }
-        
-        /* 适配不同屏幕比例 */
-        @media (min-aspect-ratio: 1/1) {
-            #gameContainer {
-                width: min(100vw, 60vh);
-                height: 100vh;
-                border-radius: 0;
-                box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            }
-        }
-        
-        @media (max-aspect-ratio: 9/16) {
-            #gameContainer {
-                width: 100vw;
-                height: 100vh;
-                border-radius: 0;
-            }
         }
         
         #gameCanvas {
@@ -77,12 +63,12 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
+            height: 50px;
             background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
             display: none;
             justify-content: space-around;
             align-items: center;
-            padding: 10px 20px;
+            padding: 8px 15px;
             z-index: 100;
             color: white;
             font-size: 14px;
@@ -101,13 +87,11 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         .ui-label {
             font-size: 10px;
             opacity: 0.8;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         
         .ui-value {
-            font-size: 16px;
+            font-size: 14px;
             margin-top: 2px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             font-weight: bold;
         }
         
@@ -115,21 +99,21 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         #level .ui-value { color: #00BFFF; }
         #lives .ui-value { color: #FF6B6B; }
         
-        /* 控制按钮 */
+        /* 控制按钮 - 适配屏幕底部 */
         #controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 8px;
+            gap: 6px;
             z-index: 100;
-            width: min(240px, 40vw);
-            height: min(240px, 40vw);
-            max-width: 180px;
-            max-height: 180px;
+            width: min(180px, 35vw);
+            height: min(180px, 35vw);
+            max-width: 150px;
+            max-height: 150px;
         }
         
         #controls.active { 
@@ -139,9 +123,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         .control-btn {
             background: rgba(255,255,255,0.15);
             border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 15px;
+            border-radius: 12px;
             color: white;
-            font-size: min(20px, 4vw);
+            font-size: min(18px, 4vw);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -150,13 +134,11 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         
         .control-btn:active {
             transform: scale(0.95);
             background: rgba(255,255,255,0.3);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
         
         #upBtn { grid-column: 2; grid-row: 1; }
@@ -170,7 +152,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         #rightBtn { grid-column: 3; grid-row: 2; }
         #downBtn { grid-column: 2; grid-row: 3; }
         
-        /* 屏幕通用样式 */
+        /* 屏幕通用样式 - 确保完整可见 */
         .screen {
             position: absolute;
             top: 0;
@@ -184,7 +166,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             justify-content: flex-start;
             align-items: center;
             z-index: 200;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
@@ -195,78 +177,66 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         .screen h1 {
-            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
             font-weight: bold;
-            margin: 20px 0 30px 0;
+            margin: 15px 0 20px 0;
             background: linear-gradient(45deg, #FFD700, #FFA500, #FF6B6B);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: none;
             text-align: center;
         }
         
         .screen p {
-            font-size: clamp(14px, 3.5vw, 16px);
-            line-height: 1.6;
-            margin-bottom: 15px;
+            font-size: clamp(12px, 3vw, 14px);
+            line-height: 1.5;
+            margin-bottom: 12px;
             opacity: 0.9;
         }
         
-        /* 按钮样式 */
+        /* 按钮样式 - 适配小屏幕 */
         .btn {
             background: linear-gradient(145deg, #4CAF50, #45a049);
             color: white;
             border: none;
-            padding: clamp(12px, 3vw, 15px) clamp(24px, 6vw, 30px);
-            font-size: clamp(14px, 3.5vw, 16px);
+            padding: clamp(10px, 2.5vw, 12px) clamp(20px, 5vw, 25px);
+            font-size: clamp(12px, 3vw, 14px);
             font-weight: bold;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
-            margin: 8px;
+            margin: 6px;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(76,175,80,0.4);
-            min-width: clamp(120px, 30vw, 180px);
-            text-transform: none;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(76,175,80,0.6);
+            min-width: clamp(100px, 25vw, 150px);
         }
         
         .btn:active {
-            transform: translateY(0);
+            transform: scale(0.98);
         }
         
         .btn.primary {
             background: linear-gradient(145deg, #FFD700, #FFA500);
             color: #1a1a1a;
-            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
         }
         
         .btn.secondary {
             background: linear-gradient(145deg, #6C7CE7, #5A6ACF);
-            box-shadow: 0 5px 15px rgba(108,124,231,0.4);
         }
         
         .btn.danger {
             background: linear-gradient(145deg, #FF6B6B, #E55555);
-            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
         }
         
         .btn.practice {
             background: linear-gradient(145deg, #9C27B0, #7B1FA2);
-            box-shadow: 0 5px 15px rgba(156,39,176,0.4);
         }
         
-        /* 关卡选择网格 */
+        /* 关卡选择网格 - 适配屏幕 */
         #levelSelect {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 12px;
-            max-width: min(90vw, 400px);
-            margin: 20px 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: min(85vw, 350px);
+            margin: 15px 0;
             width: 100%;
         }
         
@@ -274,9 +244,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             aspect-ratio: 1;
             background: rgba(255,255,255,0.1);
             border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
+            border-radius: 12px;
             color: white;
-            font-size: clamp(12px, 3vw, 14px);
+            font-size: clamp(10px, 2.5vw, 12px);
             font-weight: bold;
             display: flex;
             flex-direction: column;
@@ -285,36 +255,17 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
-            position: relative;
-            overflow: hidden;
         }
         
-        .level-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-        
-        .level-btn:hover::before {
-            transform: translateX(100%);
-        }
-        
-        .level-btn:hover {
+        .level-btn:hover,
+        .level-btn:active {
             border-color: #FFD700;
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
         }
         
         .level-btn.selected {
             border-color: #FFD700;
             background: rgba(255,215,0,0.2);
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
         }
         
         .level-btn.locked {
@@ -324,93 +275,92 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         .level-btn .level-number {
-            font-size: clamp(16px, 4vw, 20px);
-            margin-bottom: 5px;
+            font-size: clamp(14px, 3.5vw, 16px);
+            margin-bottom: 4px;
         }
         
         .level-btn .level-name {
-            font-size: clamp(10px, 2.5vw, 12px);
+            font-size: clamp(8px, 2vw, 10px);
             opacity: 0.8;
         }
         
-        /* 滚动内容 */
+        /* 滚动内容 - 适配小屏幕 */
         .scrollable-content {
-            max-height: 50vh;
+            max-height: 40vh;
             overflow-y: auto;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(5px);
             text-align: left;
-            line-height: 1.6;
-            width: min(90vw, 500px);
-            box-sizing: border-box;
+            line-height: 1.5;
+            width: min(85vw, 450px);
             -webkit-overflow-scrolling: touch;
             border: 1px solid rgba(255,255,255,0.2);
         }
         
         .scrollable-content::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
         
         .scrollable-content::-webkit-scrollbar-track {
             background: rgba(255,255,255,0.1);
-            border-radius: 3px;
+            border-radius: 2px;
         }
         
         .scrollable-content::-webkit-scrollbar-thumb {
             background: rgba(255,255,255,0.5);
-            border-radius: 3px;
+            border-radius: 2px;
         }
         
         .scrollable-content h3 {
             color: #FFD700;
-            margin: 15px 0 10px 0;
-            font-size: clamp(16px, 4vw, 18px);
+            margin: 12px 0 8px 0;
+            font-size: clamp(14px, 3.5vw, 16px);
         }
         
         .scrollable-content p {
-            margin-bottom: 10px;
-            font-size: clamp(13px, 3vw, 15px);
-            line-height: 1.5;
+            margin-bottom: 8px;
+            font-size: clamp(11px, 2.8vw, 13px);
+            line-height: 1.4;
         }
         
-        /* 关卡信息 */
+        /* 关卡信息 - 适配屏幕 */
         #levelInfo {
             text-align: center;
-            margin: 20px 0;
-            padding: 20px;
+            margin: 15px 0;
+            padding: 15px;
             background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            min-height: 120px;
+            border-radius: 12px;
+            min-height: 80px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.2);
-            width: min(90vw, 400px);
+            width: min(85vw, 350px);
         }
         
         #levelInfo h3 {
             color: #FFD700;
-            margin-bottom: 10px;
-            font-size: clamp(16px, 4vw, 18px);
+            margin-bottom: 8px;
+            font-size: clamp(14px, 3.5vw, 16px);
         }
         
         #levelInfo p {
-            font-size: clamp(13px, 3vw, 15px);
-            margin: 5px 0;
+            font-size: clamp(11px, 2.8vw, 13px);
+            margin: 4px 0;
         }
         
-        /* 状态效果指示器 */
+        /* 状态效果指示器 - 适配屏幕 */
         #effectIndicators {
             position: absolute;
-            top: 70px;
-            right: 10px;
+            top: 60px;
+            right: 8px;
             display: none;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
             z-index: 150;
         }
         
@@ -421,12 +371,12 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         .effect-indicator {
             background: rgba(0,0,0,0.7);
             color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 10px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.2);
         }
@@ -434,45 +384,95 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         /* 响应式调整 */
         @media (max-height: 600px) {
             .screen h1 {
-                margin: 10px 0 20px 0;
+                margin: 8px 0 12px 0;
             }
             
             .scrollable-content {
-                max-height: 40vh;
+                max-height: 35vh;
+                padding: 12px;
             }
             
             #levelInfo {
-                min-height: 80px;
-                padding: 15px;
+                min-height: 60px;
+                padding: 12px;
+            }
+            
+            #gameUI {
+                height: 45px;
+            }
+            
+            #controls {
+                bottom: 8px;
+                width: min(160px, 32vw);
+                height: min(160px, 32vw);
+            }
+        }
+        
+        @media (max-height: 500px) {
+            .screen h1 {
+                font-size: clamp(1.2rem, 4vw, 1.8rem);
+                margin: 5px 0 8px 0;
+            }
+            
+            .scrollable-content {
+                max-height: 30vh;
+                padding: 10px;
+            }
+            
+            .btn {
+                padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 20px);
+                margin: 4px;
+            }
+            
+            #controls {
+                width: min(140px, 28vw);
+                height: min(140px, 28vw);
+                bottom: 5px;
             }
         }
         
         @media (max-width: 360px) {
+            #levelSelect {
+                gap: 6px;
+            }
+            
+            .level-btn {
+                border-radius: 10px;
+            }
+            
             #controls {
-                width: 160px;
-                height: 160px;
+                gap: 4px;
             }
             
             .control-btn {
                 font-size: 16px;
             }
-            
-            #levelSelect {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
         }
         
-        /* 高分辨率屏幕优化 */
-        @media (min-width: 768px) {
-            #gameContainer {
-                max-width: 400px;
-                border-radius: 20px;
+        /* 横屏优化 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .screen {
+                padding: 10px;
+            }
+            
+            .screen h1 {
+                font-size: clamp(1rem, 3vh, 1.5rem);
+                margin: 5px 0 8px 0;
+            }
+            
+            .scrollable-content {
+                max-height: 25vh;
+            }
+            
+            #levelSelect {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
             }
             
             #controls {
-                width: 200px;
-                height: 200px;
+                width: min(120px, 20vw);
+                height: min(120px, 20vh);
+                bottom: 5px;
             }
         }
     </style>
@@ -550,17 +550,17 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 <h3>💎 特殊道具</h3>
                 <p>• 💎 钻石 (+50分) - 高价值道具</p>
-                <p>• ⚡ 闪电 (10秒穿墙能力) - 可以穿过墙壁</p>
-                <p>• 🛡️ 盾牌 (5秒无敌状态) - 碰到障碍不死</p>
-                <p>• 🌟 星星 (15秒双倍得分) - 所有分数翻倍</p>
-                <p>• ❄️ 冰块 (8秒时间缓慢) - 游戏速度减半</p>
-                <p>• 🔥 火焰 (6秒超高速) - 移动速度大幅提升</p>
+                <p>• ⚡ 闪电 (12秒穿墙能力) - 可以穿过墙壁</p>
+                <p>• 🛡️ 盾牌 (8秒无敌状态) - 碰到障碍不死</p>
+                <p>• 🌟 星星 (20秒双倍得分) - 所有分数翻倍</p>
+                <p>• ❄️ 冰块 (10秒时间缓慢) - 游戏速度减半</p>
+                <p>• 🔥 火焰 (8秒超高速) - 移动速度大幅提升</p>
                 <p>• 🍀 四叶草 (随机好效果) - 触发随机正面效果</p>
                 
                 <h3>💀 危险道具</h3>
                 <p>• 💀 骷髅 (-30分并减少生命) - 避免碰触</p>
                 <p>• 🕳️ 黑洞 (传送到随机位置) - 随机传送</p>
-                <p>• 🌪️ 龙卷风 (5秒反向操作) - 控制方向相反</p>
+                <p>• 🌪️ 龙卷风 (8秒反向操作) - 控制方向相反</p>
                 
                 <h3>🏋️ 练习场模式</h3>
                 <p>• 无限生命，轻松练习操作</p>
@@ -574,31 +574,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 <p>• 达到目标分数即可解锁下一关</p>
                 <p>• 生命有限，需要谨慎操作</p>
                 <p>• 不同关卡有不同的地形和挑战</p>
-                
-                <h3>🎯 关卡特色</h3>
-                <p>• 新手村：简单入门</p>
-                <p>• 森林迷宫：墙壁障碍</p>
-                <p>• 速度狂飙：逐渐加速</p>
-                <p>• 十字路口：十字形墙壁</p>
-                <p>• 围城之战：四面围墙</p>
-                <p>• 螺旋通道：螺旋形迷宫</p>
-                <p>• 双龙戏珠：双通道设计</p>
-                <p>• 星空漫步：星形图案</p>
-                <p>• 终极挑战：最高难度</p>
-                
-                <h3>💡 游戏技巧</h3>
-                <p>• 建议先在练习场熟悉各种道具</p>
-                <p>• 合理规划路线避免困住自己</p>
-                <p>• 优先收集高分道具和有益效果</p>
-                <p>• 善用道具效果的持续时间</p>
-                <p>• 在有盾牌效果时可以更激进</p>
-                <p>• 注意观察蛇身长度变化</p>
-                <p>• 保持冷静，稳中求胜</p>
-                
-                <h3>🏅 成就系统</h3>
-                <p>• 完成所有关卡解锁特殊称号</p>
-                <p>• 挑战高分记录</p>
-                <p>• 尝试完美通关（无死亡）</p>
             </div>
             <button class="btn secondary" id="backFromInstructionsBtn">返回主菜单</button>
         </div>
@@ -615,10 +590,10 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         <!-- 游戏结束屏幕 -->
         <div id="gameOverScreen" class="screen">
             <h1>💀 游戏结束</h1>
-            <div style="margin: 20px 0;">
+            <div style="margin: 15px 0;">
                 <p>最终分数: <span id="finalScore" style="color: #FFD700; font-weight: bold;">0</span></p>
                 <p>存活时间: <span id="survivalTime" style="color: #87CEEB; font-weight: bold;">0</span>秒</p>
-                <p id="gameOverReason" style="color: #FF6B6B; margin-top: 10px;"></p>
+                <p id="gameOverReason" style="color: #FF6B6B; margin-top: 8px;"></p>
             </div>
             <button class="btn primary" id="restartGameBtn">重新挑战</button>
             <button class="btn secondary" id="selectLevelBtn">选择关卡</button>
@@ -628,10 +603,10 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         <!-- 关卡完成屏幕 -->
         <div id="levelCompleteScreen" class="screen">
             <h1>🎉 关卡完成!</h1>
-            <div style="margin: 20px 0;">
+            <div style="margin: 15px 0;">
                 <p>获得分数: <span id="levelScore" style="color: #FFD700; font-weight: bold;">0</span></p>
                 <p>完成时间: <span id="completionTime" style="color: #87CEEB; font-weight: bold;">0</span>秒</p>
-                <p id="levelCompleteBonus" style="color: #98FB98; margin-top: 10px;"></p>
+                <p id="levelCompleteBonus" style="color: #98FB98; margin-top: 8px;"></p>
             </div>
             <button class="btn primary" id="nextLevelBtn">下一关</button>
             <button class="btn secondary" id="chooseLevelBtn">选择关卡</button>
@@ -640,8 +615,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
     </div>
 
     <script>
-        console.log('🐍 贪食蛇大冒险 - 正在加载...');
-
         // 全局变量
         let canvas, ctx;
         let gameState = 'menu';
@@ -649,7 +622,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         let game = null;
         let gameLoop = null;
         
-        // 完整的关卡定义（12个关卡）
+        // 关卡定义
         const levels = [
             {
                 id: 0,
@@ -833,7 +806,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
         ];
         
-        // 扩展的道具定义
+        // 道具定义
         const powerups = {
             apple: { symbol: '🍎', points: 10, effect: null, rarity: 0.35, name: '红苹果' },
             grape: { symbol: '🍇', points: 20, effect: 'speed', rarity: 0.12, name: '紫葡萄' },
@@ -855,27 +828,34 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         class SnakeGame {
             constructor() {
                 console.log('🎮 创建游戏实例...');
-                this.gridSize = 20;
                 this.reset();
-                this.lastSpeedIncrease = 0;
             }
             
             reset() {
                 console.log('🔄 重置游戏状态...');
                 
-                // 动态计算网格大小以适应屏幕
-                const availableWidth = canvas.width - 40; // 留出边距
-                const availableHeight = canvas.height - 120; // 留出UI空间
+                // 计算合适的游戏区域
+                const gameAreaHeight = canvas.height - 200; // 预留UI和控制按钮空间
+                const gameAreaWidth = canvas.width - 40; // 预留边距
                 
+                // 确保网格大小合理
                 this.gridSize = Math.min(
-                    Math.floor(availableWidth / 20),
-                    Math.floor(availableHeight / 20),
-                    25 // 最大格子大小
+                    Math.floor(gameAreaWidth / 20),
+                    Math.floor(gameAreaHeight / 20),
+                    30 // 最大格子大小
                 );
-                this.gridSize = Math.max(this.gridSize, 15); // 最小格子大小
+                this.gridSize = Math.max(this.gridSize, 12); // 最小格子大小
                 
-                this.cols = Math.floor(canvas.width / this.gridSize);
-                this.rows = Math.floor(canvas.height / this.gridSize);
+                this.cols = Math.floor(gameAreaWidth / this.gridSize);
+                this.rows = Math.floor(gameAreaHeight / this.gridSize);
+                
+                // 确保有足够的游戏区域
+                this.cols = Math.max(this.cols, 15);
+                this.rows = Math.max(this.rows, 15);
+                
+                // 计算游戏区域位置（居中显示，顶部留出UI空间）
+                this.gameOffsetX = (canvas.width - this.cols * this.gridSize) / 2;
+                this.gameOffsetY = 60 + (canvas.height - 60 - 160 - this.rows * this.gridSize) / 2;
                 
                 const startCol = Math.floor(this.cols / 2);
                 const startRow = Math.floor(this.rows / 2);
@@ -901,6 +881,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 this.updateEffectIndicators();
                 
                 console.log(`✅ 游戏重置完成 - 网格: ${this.cols}x${this.rows}, 格子大小: ${this.gridSize}px`);
+                console.log(`📐 游戏区域位置: (${this.gameOffsetX}, ${this.gameOffsetY})`);
             }
             
             generateFood() {
@@ -958,7 +939,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 if (currentLevel && currentLevel.speedIncrease && this.score > this.lastSpeedIncrease + 100) {
                     this.speed = Math.max(60, this.speed - 5);
                     this.lastSpeedIncrease = this.score;
-                    console.log(`🚀 速度提升! 当前速度: ${this.speed}ms`);
                 }
                 
                 this.direction = {...this.nextDirection};
@@ -1030,15 +1010,11 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             
             handleCollision(reason = '未知原因') {
                 if (this.activePowerups.has('invincible')) {
-                    console.log('🛡️ 无敌状态，免疫碰撞');
                     return;
                 }
                 
-                console.log(`💥 碰撞发生: ${reason}`);
-                
                 if (selectedLevelId !== 0) {
                     this.lives--;
-                    console.log(`❤️ 生命值: ${this.lives}`);
                 }
                 
                 if (this.lives <= 0 && selectedLevelId !== 0) {
@@ -1066,8 +1042,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 const points = Math.max(0, foodData.points * multiplier);
                 this.score += points;
                 
-                console.log(`🍎 吃到 ${foodData.name} (+${points}分)`);
-                
                 this.handlePowerupEffect(this.food.type);
                 this.generateFood();
                 this.updateUI();
@@ -1094,7 +1068,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                         setTimeout(() => {
                             this.speed = Math.min(250, this.speed + 25);
                         }, 8000);
-                        console.log('🍇 速度提升8秒');
                         break;
                         
                     case 'slow':
@@ -1102,51 +1075,42 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                         setTimeout(() => {
                             this.speed = Math.max(60, this.speed - 40);
                         }, 8000);
-                        console.log('🍓 速度减慢8秒');
                         break;
                         
                     case 'growth':
                         this.snake.push({...this.snake[this.snake.length - 1]});
                         this.snake.push({...this.snake[this.snake.length - 1]});
-                        console.log('🍌 蛇身增长2格');
                         break;
                         
                     case 'wallpass':
                         this.activePowerups.set('wallpass', now + 12000);
-                        console.log('⚡ 穿墙能力12秒');
                         break;
                         
                     case 'invincible':
                         this.activePowerups.set('invincible', now + 8000);
-                        console.log('🛡️ 无敌状态8秒');
                         break;
                         
                     case 'doublescore':
                         this.activePowerups.set('doublescore', now + 20000);
-                        console.log('🌟 双倍得分20秒');
                         break;
                         
                     case 'freeze':
                         this.activePowerups.set('freeze', now + 10000);
-                        console.log('❄️ 时间缓慢10秒');
                         break;
                         
                     case 'hyperspeed':
                         this.activePowerups.set('hyperspeed', now + 8000);
-                        console.log('🔥 超高速8秒');
                         break;
                         
                     case 'random':
                         const goodEffects = ['speed', 'wallpass', 'invincible', 'doublescore', 'freeze'];
                         const randomEffect = goodEffects[Math.floor(Math.random() * goodEffects.length)];
                         this.handlePowerupEffect(randomEffect);
-                        console.log('🍀 触发随机效果:', randomEffect);
                         break;
                         
                     case 'damage':
                         if (selectedLevelId !== 0) {
                             this.lives = Math.max(0, this.lives - 1);
-                            console.log('💀 生命值-1');
                             if (this.lives <= 0) this.gameOver('生命耗尽');
                         }
                         break;
@@ -1155,16 +1119,13 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                         const newX = Math.floor(Math.random() * this.cols);
                         const newY = Math.floor(Math.random() * this.rows);
                         this.snake[0] = {x: newX, y: newY};
-                        console.log('🕳️ 随机传送');
                         break;
                         
                     case 'reverse':
                         this.isReversed = true;
                         setTimeout(() => {
                             this.isReversed = false;
-                            console.log('🌪️ 反向控制结束');
                         }, 8000);
-                        console.log('🌪️ 反向控制8秒');
                         break;
                 }
             }
@@ -1194,7 +1155,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 for (const effect of toRemove) {
                     this.activePowerups.delete(effect);
-                    console.log(`⏰ 效果结束: ${effect}`);
                 }
                 
                 if (toRemove.length > 0) {
@@ -1244,10 +1204,10 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 let speed = this.speed;
                 
                 if (this.activePowerups.has('freeze')) {
-                    speed *= 2; // 缓慢效果
+                    speed *= 2;
                 }
                 if (this.activePowerups.has('hyperspeed')) {
-                    speed = Math.max(40, speed - 60); // 超高速效果
+                    speed = Math.max(40, speed - 60);
                 }
                 
                 return speed;
@@ -1269,11 +1229,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 // 解锁下一关
                 if (selectedLevelId < levels.length - 1) {
                     levels[selectedLevelId + 1].unlocked = true;
-                    console.log(`🔓 解锁关卡 ${selectedLevelId + 1}`);
                 }
                 
                 showScreen('levelCompleteScreen');
-                console.log(`🎉 关卡 ${selectedLevelId} 完成! 分数: ${this.score}`);
             }
             
             gameOver(reason = '游戏结束') {
@@ -1285,7 +1243,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 document.getElementById('gameOverReason').textContent = `失败原因: ${reason}`;
                 
                 showScreen('gameOverScreen');
-                console.log(`💀 游戏结束: ${reason}, 分数: ${this.score}`);
             }
             
             draw() {
@@ -1293,20 +1250,28 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 ctx.fillStyle = '#1a1a2e';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
+                // 绘制游戏边界
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.gameOffsetX - 1, this.gameOffsetY - 1, 
+                             this.cols * this.gridSize + 2, this.rows * this.gridSize + 2);
+                
                 // 绘制网格线（可选）
-                if (this.gridSize >= 20) {
+                if (this.gridSize >= 18) {
                     ctx.strokeStyle = 'rgba(255,255,255,0.05)';
                     ctx.lineWidth = 0.5;
-                    for (let x = 0; x <= canvas.width; x += this.gridSize) {
+                    for (let x = 0; x <= this.cols; x++) {
+                        const lineX = this.gameOffsetX + x * this.gridSize;
                         ctx.beginPath();
-                        ctx.moveTo(x, 0);
-                        ctx.lineTo(x, canvas.height);
+                        ctx.moveTo(lineX, this.gameOffsetY);
+                        ctx.lineTo(lineX, this.gameOffsetY + this.rows * this.gridSize);
                         ctx.stroke();
                     }
-                    for (let y = 0; y <= canvas.height; y += this.gridSize) {
+                    for (let y = 0; y <= this.rows; y++) {
+                        const lineY = this.gameOffsetY + y * this.gridSize;
                         ctx.beginPath();
-                        ctx.moveTo(0, y);
-                        ctx.lineTo(canvas.width, y);
+                        ctx.moveTo(this.gameOffsetX, lineY);
+                        ctx.lineTo(this.gameOffsetX + this.cols * this.gridSize, lineY);
                         ctx.stroke();
                     }
                 }
@@ -1319,8 +1284,8 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     ctx.lineWidth = 2;
                     
                     currentLevel.walls.forEach(wall => {
-                        const x = wall.x * this.gridSize;
-                        const y = wall.y * this.gridSize;
+                        const x = this.gameOffsetX + wall.x * this.gridSize;
+                        const y = this.gameOffsetY + wall.y * this.gridSize;
                         const width = wall.width * this.gridSize;
                         const height = wall.height * this.gridSize;
                         
@@ -1332,16 +1297,16 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 // 绘制食物
                 if (this.food) {
                     const foodData = powerups[this.food.type];
-                    const x = this.food.x * this.gridSize;
-                    const y = this.food.y * this.gridSize;
+                    const x = this.gameOffsetX + this.food.x * this.gridSize;
+                    const y = this.gameOffsetY + this.food.y * this.gridSize;
                     
                     // 食物发光效果
                     if (foodData.points >= 30) {
                         ctx.shadowColor = '#FFD700';
-                        ctx.shadowBlur = 10;
+                        ctx.shadowBlur = 8;
                     }
                     
-                    ctx.font = `${Math.floor(this.gridSize * 0.8)}px Arial`;
+                    ctx.font = `${Math.floor(this.gridSize * 0.75)}px Arial`;
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillText(
@@ -1355,9 +1320,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 // 绘制蛇
                 this.snake.forEach((segment, index) => {
-                    const x = segment.x * this.gridSize;
-                    const y = segment.y * this.gridSize;
-                    const padding = 2;
+                    const x = this.gameOffsetX + segment.x * this.gridSize;
+                    const y = this.gameOffsetY + segment.y * this.gridSize;
+                    const padding = Math.max(1, Math.floor(this.gridSize * 0.1));
                     
                     if (index === 0) {
                         // 蛇头
@@ -1370,16 +1335,18 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                         ctx.fillRect(x + padding, y + padding, this.gridSize - padding*2, this.gridSize - padding*2);
                         
                         // 眼睛
-                        ctx.fillStyle = 'white';
-                        const eyeSize = Math.max(2, Math.floor(this.gridSize / 8));
-                        ctx.fillRect(x + padding + 2, y + padding + 2, eyeSize, eyeSize);
-                        ctx.fillRect(x + this.gridSize - padding - eyeSize - 2, y + padding + 2, eyeSize, eyeSize);
-                        
-                        // 瞳孔
-                        ctx.fillStyle = 'black';
-                        const pupilSize = Math.max(1, Math.floor(eyeSize / 2));
-                        ctx.fillRect(x + padding + 3, y + padding + 3, pupilSize, pupilSize);
-                        ctx.fillRect(x + this.gridSize - padding - eyeSize - 1, y + padding + 3, pupilSize, pupilSize);
+                        if (this.gridSize >= 15) {
+                            ctx.fillStyle = 'white';
+                            const eyeSize = Math.max(2, Math.floor(this.gridSize / 8));
+                            ctx.fillRect(x + padding + 2, y + padding + 2, eyeSize, eyeSize);
+                            ctx.fillRect(x + this.gridSize - padding - eyeSize - 2, y + padding + 2, eyeSize, eyeSize);
+                            
+                            // 瞳孔
+                            ctx.fillStyle = 'black';
+                            const pupilSize = Math.max(1, Math.floor(eyeSize / 2));
+                            ctx.fillRect(x + padding + 3, y + padding + 3, pupilSize, pupilSize);
+                            ctx.fillRect(x + this.gridSize - padding - eyeSize - 1, y + padding + 3, pupilSize, pupilSize);
+                        }
                     } else {
                         // 蛇身
                         ctx.fillStyle = index % 2 === 1 ? '#90EE90' : '#98FB98';
@@ -1389,26 +1356,27 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 // 特殊效果覆盖
                 if (this.activePowerups.has('invincible')) {
-                    ctx.fillStyle = 'rgba(255, 215, 0, 0.15)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(255, 215, 0, 0.1)';
+                    ctx.fillRect(this.gameOffsetX, this.gameOffsetY, 
+                               this.cols * this.gridSize, this.rows * this.gridSize);
                 }
                 
                 if (this.activePowerups.has('wallpass')) {
-                    ctx.fillStyle = 'rgba(0, 191, 255, 0.1)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(0, 191, 255, 0.08)';
+                    ctx.fillRect(this.gameOffsetX, this.gameOffsetY, 
+                               this.cols * this.gridSize, this.rows * this.gridSize);
                 }
                 
                 if (this.isReversed) {
-                    ctx.fillStyle = 'rgba(255, 107, 107, 0.15)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(255, 107, 107, 0.1)';
+                    ctx.fillRect(this.gameOffsetX, this.gameOffsetY, 
+                               this.cols * this.gridSize, this.rows * this.gridSize);
                 }
             }
         }
         
         // 屏幕管理函数
         function showScreen(screenId) {
-            console.log('📱 显示屏幕:', screenId);
-            
             // 隐藏所有屏幕
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -1424,14 +1392,11 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 const screen = document.getElementById(screenId);
                 if (screen) {
                     screen.classList.add('active');
-                } else {
-                    console.error('❌ 屏幕未找到:', screenId);
                 }
             }
         }
         
         function showStartScreen() {
-            console.log('🏠 显示主菜单');
             gameState = 'menu';
             selectedLevelId = null;
             showScreen('startScreen');
@@ -1443,7 +1408,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         function showLevelSelect() {
-            console.log('📋 显示关卡选择');
             generateLevelButtons();
             showScreen('levelSelectScreen');
             
@@ -1455,21 +1419,17 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         function showInstructions() {
-            console.log('📖 显示游戏说明');
             showScreen('instructionsScreen');
         }
         
         function startPractice() {
-            console.log('🏋️ 开始练习模式');
             selectedLevelId = 0;
             startGame();
         }
         
         function selectLevel(levelId) {
-            console.log('✅ 选择关卡:', levelId);
             const level = levels.find(l => l.id === levelId);
             if (!level || (!level.unlocked && levelId !== 0)) {
-                console.log('❌ 关卡未解锁:', levelId);
                 return;
             }
             
@@ -1490,7 +1450,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     <h3>${level.emoji} ${level.name}</h3>
                     <p>${level.description}</p>
                     <p>无限生命，体验所有道具效果</p>
-                    <p>没有目标分数，尽情练习！</p>
                 `;
             } else {
                 document.getElementById('levelInfo').innerHTML = `
@@ -1498,8 +1457,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                     <p>${level.description}</p>
                     <p>目标分数: <span style="color: #FFD700;">${level.targetScore}</span></p>
                     <p>初始生命: <span style="color: #FF6B6B;">500</span></p>
-                    <p>游戏速度: <span style="color: #87CEEB;">${level.speed}ms</span></p>
-                    ${level.speedIncrease ? '<p style="color: #FFA500;">⚠️ 速度会逐渐加快</p>' : ''}
                 `;
             }
             
@@ -1507,19 +1464,14 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         }
         
         function startSelectedLevel() {
-            console.log('🚀 开始选中的关卡:', selectedLevelId);
             if (selectedLevelId === null) {
-                console.error('❌ 未选择关卡');
                 return;
             }
             startGame();
         }
         
         function startGame() {
-            console.log('🎮 开始游戏，关卡ID:', selectedLevelId);
-            
             if (selectedLevelId === null) {
-                console.error('❌ 未选择关卡');
                 return;
             }
             
@@ -1558,12 +1510,9 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             }
             
             gameLoop = setInterval(gameLoopFunction, game.getCurrentSpeed());
-            
-            console.log('✅ 游戏开始成功');
         }
         
         function generateLevelButtons() {
-            console.log('🔄 生成关卡按钮...');
             const container = document.getElementById('levelSelect');
             container.innerHTML = '';
             
@@ -1591,15 +1540,12 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                 
                 container.appendChild(button);
             });
-            
-            console.log('✅ 关卡按钮生成完成');
         }
         
         function pauseGame() {
             if (gameState === 'playing') {
                 gameState = 'paused';
                 showScreen('pauseScreen');
-                console.log('⏸️ 游戏暂停');
             }
         }
         
@@ -1609,34 +1555,27 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             document.getElementById('gameUI').classList.add('active');
             document.getElementById('controls').classList.add('active');
             document.getElementById('effectIndicators').classList.add('active');
-            console.log('▶️ 继续游戏');
         }
         
         function restartLevel() {
-            console.log('🔄 重新开始关卡');
             startGame();
         }
         
         function quitToMenu() {
-            console.log('🏠 退出到主菜单');
             showStartScreen();
         }
         
         function nextLevel() {
             if (selectedLevelId < levels.length - 1) {
                 selectedLevelId++;
-                console.log('➡️ 进入下一关:', selectedLevelId);
                 startGame();
             } else {
-                console.log('🎊 所有关卡完成！');
                 showStartScreen();
             }
         }
         
         // 事件监听器设置
         function setupEventListeners() {
-            console.log('🔧 设置事件监听器...');
-            
             // 主菜单按钮
             document.getElementById('practiceBtn').addEventListener('click', startPractice);
             document.getElementById('adventureBtn').addEventListener('click', showLevelSelect);
@@ -1674,8 +1613,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
                             game.changeDirection(direction);
                         }
                     });
-                } else {
-                    console.error(`❌ 按钮未找到: ${id}`);
                 }
             }
             
@@ -1779,7 +1716,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(() => {
-                    console.log('📐 窗口大小调整');
                     resizeCanvas();
                     if (game && gameState === 'playing') {
                         game.reset();
@@ -1791,38 +1727,19 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden && gameState === 'playing') {
                     pauseGame();
-                    console.log('⏸️ 页面不可见，自动暂停');
                 }
             });
-            
-            console.log('✅ 事件监听器设置完成');
         }
         
         function resizeCanvas() {
             console.log('📐 调整画布大小...');
             const container = document.getElementById('gameContainer');
-            const rect = container.getBoundingClientRect();
             
-            // 设置画布尺寸
-            canvas.width = rect.width;
-            canvas.height = rect.height;
+            // 设置画布尺寸为容器尺寸
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
             
-            // 设置像素比以支持高分辨率屏幕
-            const pixelRatio = window.devicePixelRatio || 1;
-            const displayWidth = canvas.clientWidth;
-            const displayHeight = canvas.clientHeight;
-            
-            if (canvas.width !== displayWidth * pixelRatio ||
-                canvas.height !== displayHeight * pixelRatio) {
-                canvas.width = displayWidth * pixelRatio;
-                canvas.height = displayHeight * pixelRatio;
-                
-                ctx.scale(pixelRatio, pixelRatio);
-                canvas.style.width = displayWidth + 'px';
-                canvas.style.height = displayHeight + 'px';
-            }
-            
-            console.log(`✅ 画布大小: ${canvas.width}x${canvas.height} (显示: ${displayWidth}x${displayHeight})`);
+            console.log(`✅ 画布大小: ${canvas.width}x${canvas.height}`);
         }
         
         // 初始化函数
@@ -1841,11 +1758,7 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
             resizeCanvas();
             setupEventListeners();
             
-            // 预加载提示
             console.log('🎮 贪食蛇大冒险已准备就绪！');
-            console.log('📱 支持触摸滑动和虚拟按键控制');
-            console.log('⌨️ 电脑用户可使用 WASD 或方向键');
-            console.log('🎯 共有12个独特关卡等你挑战！');
         }
         
         // 错误处理
@@ -1862,8 +1775,6 @@ Creating an interesting game only for my love, Ashley. Hope her happy everyday!
         } else {
             init();
         }
-        
-        console.log('📜 贪食蛇大冒险脚本加载完成');
     </script>
 </body>
 </html>
